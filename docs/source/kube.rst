@@ -1,7 +1,7 @@
-Scaling [--solutionname--] With Kubernetes
+Scaling [myprivategpt-71b9] With Kubernetes
 ===========================
 
-Generated On: --datetime-- UTC
+Generated On: 2024-12-05 19:05:46 UTC
 
 You can scale your solution with Kubernetes.  To do so, will will need to apply the following YAML files to your Kubernetes cluster.
 
@@ -33,13 +33,13 @@ You can scale your solution with Kubernetes.  To do so, will will need to apply 
    sudo systemctl restart docker
 
 
-Based on your TML solution [--solutionname--] - if you want to scale your application with Kubernetes - you will need to apply the following YAML files.
+Based on your TML solution [myprivategpt-71b9] - if you want to scale your application with Kubernetes - you will need to apply the following YAML files.
 
 .. list-table::
 
    * - **YML File**
      - **Description**
-   * - :ref:`--solutionnamefile--`
+   * - :ref:`myprivategpt-71b9.yml`
      - This is your main solution YAML file.  
  
        It MUST be applied to your Kubernetes cluster.
@@ -72,13 +72,13 @@ kubectl Create command
 
 .. code-block:: YAML
 
-   --kubectl--
+   kubectl apply -f mysql-storage.yml -f mysql-db-deployment.yml -f qdrant.yml -f privategpt.yml -f myprivategpt-71b9.yml
 
---solutionnamefile--
+myprivategpt-71b9.yml
 ------------------------
 
 .. important::
-   Copy and Paste this YAML file: --solutionnamefile-- - and save it locally.
+   Copy and Paste this YAML file: myprivategpt-71b9.yml - and save it locally.
 
 .. attention::
 
@@ -98,8 +98,110 @@ kubectl Create command
 
 .. code-block:: YAML
 
-   ################# --solutionnamefile--
-   --solutionnamecode--
+   ################# myprivategpt-71b9.yml
+   
+     apiVersion: apps/v1
+     kind: Deployment
+     metadata:
+       name: myprivategpt-71b9
+     spec:
+       selector:
+         matchLabels:
+           app: myprivategpt-71b9
+       replicas: 3 # tells deployment to run 1 pods matching the template
+       template:
+         metadata:
+           labels:
+             app: myprivategpt-71b9
+         spec:
+           containers:
+           - name: myprivategpt-71b9
+             image: pokhrelankur8@gmail.com/myprivategpt-71b9-amd64:latest
+             volumeMounts:
+             - name: dockerpath
+               mountPath: /var/run/docker.sock
+             ports:
+             - containerPort: 8883
+             - containerPort: 56917
+             - containerPort: 36229
+             - containerPort: 41961
+             env:
+             - name: TSS
+               value: '0'
+             - name: SOLUTIONNAME
+               value: 'myprivategpt-71b9'
+             - name: SOLUTIONDAG
+               value: 'solution_preprocessing_ai_mqtt_dag-myprivategpt-71b9'
+             - name: GITUSERNAME
+               value: 'AnkurPokhrel8'
+             - name: GITREPOURL
+               value: 'https://github.com/AnkurPokhrel8/raspberryCYT180'
+             - name: SOLUTIONEXTERNALPORT
+               value: '41961'
+             - name: CHIP
+               value: 'amd64'
+             - name: SOLUTIONAIRFLOWPORT
+               value: '56917'
+             - name: SOLUTIONVIPERVIZPORT
+               value: '36229'
+             - name: DOCKERUSERNAME
+               value: 'pokhrelankur8@gmail.com'
+             - name: CLIENTPORT
+               value: '8883'
+             - name: EXTERNALPORT
+               value: '45065'
+             - name: KAFKACLOUDUSERNAME
+               value: ''
+             - name: VIPERVIZPORT
+               value: '9005'
+             - name: MQTTUSERNAME
+               value: 'Stream'
+             - name: AIRFLOWPORT
+               value: '9000'
+             - name: GITPASSWORD
+               value: '<ENTER GITHUB PASSWORD>'
+             - name: KAFKACLOUDPASSWORD
+               value: '<Enter API secret>'
+             - name: MQTTPASSWORD
+               value: '<ENTER MQTT PASSWORD>'
+             - name: READTHEDOCS
+               value: '<ENTER READTHEDOCS TOKEN>'
+             - name: qip 
+               value: 'privategpt-service' # This is private GPT service in kubernetes
+             - name: KUBE
+               value: '1'
+           volumes: 
+           - name: dockerpath
+             hostPath:
+               path: /var/run/docker.sock
+   ---
+     apiVersion: v1
+     kind: Service
+     metadata:
+       name: myprivategpt-71b9-service
+       labels:
+         app: myprivategpt-71b9-service
+     spec:
+       type: NodePort #Exposes the service as a node ports
+       ports:
+       - port: 8883
+         name: p1
+         protocol: TCP
+         targetPort: 8883
+       - port: 56917
+         name: p2
+         protocol: TCP
+         targetPort: 56917
+       - port: 36229
+         name: p3
+         protocol: TCP
+         targetPort: 36229
+       - port: 41961
+         name: p4
+         protocol: TCP
+         targetPort: 41961
+       selector:
+         app: myprivategpt-71b9
 
 .. tip::
 
